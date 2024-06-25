@@ -29,6 +29,8 @@ use App\Filament\Resources\PostResource\Pages\EditPost;
 use App\Filament\Resources\PostResource\Pages\ListPosts;
 use App\Filament\Resources\PostResource\Pages\CreatePost;
 use App\Filament\Resources\PostResource\RelationManagers;
+use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\ImageColumn;
 
 class PostResource extends Resource
@@ -43,18 +45,43 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('title')->required(),
-                TextInput::make('slug')->required(),
-                Select::make('category_id')
-                    ->label('Category')
-                    ->options(category::all()->pluck('name', 'id')),
-                ColorPicker::make('color')->required(),
-                // gambarnya terseimpan di public dan berada di storage/app/public
-                FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
-                MarkdownEditor::make('content')->required(),
-                TagsInput::make('tags')->required(),
-                Checkbox::make('published')->required(),
-            ]);
+                // section seperti halnya container
+                Section::make('Create a Post')
+                    ->description('create posts over here')
+                    // ->aside()
+                    // ->collapsed()
+                    ->schema([
+
+                        TextInput::make('title')->required(),
+                        TextInput::make('slug')->required(),
+                        Select::make('category_id')
+                            ->label('Category')
+                            ->options(category::all()->pluck('name', 'id')),
+                        ColorPicker::make('color')->required(),
+                        // gambarnya terseimpan di public dan berada di storage/app/public
+                        MarkdownEditor::make('content')->required()->columnSpan('full'),
+                    ])->columnSpan(2)->columns(2),
+
+                Group::make()->schema([
+                    Section::make('image')
+                        ->collapsed()
+                        ->schema([
+                            FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
+                        ])->columnSpan(1),
+                    section::make('Meta')->schema([
+                        TagsInput::make('tags')->required(),
+                        Checkbox::make('published')->required(),
+                    ])
+                ]),
+            ])->columns(3);
+        // Responsive
+        // ])->columns([
+        //     // Ukuran break point, untuk angkanya itu collumn
+        //     'default' => 1,
+        //     'md' => 2,
+        //     'lg' => 3,
+        //     'xl' => 4
+        // ]);
     }
 
     public static function table(Table $table): Table
