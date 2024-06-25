@@ -25,7 +25,7 @@ class DashboardPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('dashboard')
-            ->path('dashboard')
+            ->path('admin')
             ->login()
             ->colors([
                 'primary' => Color::Amber,
