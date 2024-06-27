@@ -51,12 +51,17 @@ class PostResource extends Resource
                     // ->aside()
                     // ->collapsed()
                     ->schema([
-
-                        TextInput::make('title')->required(),
+                        // kegunaan dari 'in:it,hi,he' adalah ketika user menginputkan harus ada kata itu
+                        // untujk menggunakan validatition itu menggunakan rulus pada ko9denya
+                        // ada berbagai macam rules seperti min value, max valuemin leght dan max,numeric ,dll
+                        TextInput::make('title')->rules(['min: 2','max:10','in:it,hi,he'])->required(),
                         TextInput::make('slug')->required(),
+                        
                         Select::make('category_id')
                             ->label('Category')
-                            ->options(category::all()->pluck('name', 'id')),
+                            // kegunaan dari pluck adalah untuk mengambil nilai dari column pd tablenya
+                            ->options(category::all()->pluck('name', 'id'))
+                            ->required(),
                         ColorPicker::make('color')->required(),
                         // gambarnya terseimpan di public dan berada di storage/app/public
                         MarkdownEditor::make('content')->required()->columnSpan('full'),
@@ -76,7 +81,7 @@ class PostResource extends Resource
             ])->columns(3);
         // Responsive
         // ])->columns([
-        //     // Ukuran break point, untuk angkanya itu collumn
+        //     // Ukuran break point, untuk angkanya itu collumnz
         //     'default' => 1,
         //     'md' => 2,
         //     'lg' => 3,
