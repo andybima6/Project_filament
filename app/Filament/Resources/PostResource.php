@@ -54,9 +54,9 @@ class PostResource extends Resource
                         // kegunaan dari 'in:it,hi,he' adalah ketika user menginputkan harus ada kata itu
                         // untujk menggunakan validatition itu menggunakan rulus pada ko9denya
                         // ada berbagai macam rules seperti min value, max valuemin leght dan max,numeric ,dll
-                        TextInput::make('title')->rules(['min: 2','max:10','in:it,hi,he'])->required(),
+                        TextInput::make('title')->rules(['min: 2', 'max:10', 'in:it,hi,he'])->required(),
                         TextInput::make('slug')->required(),
-                        
+
                         Select::make('category_id')
                             ->label('Category')
                             // kegunaan dari pluck adalah untuk mengambil nilai dari column pd tablenya
@@ -93,15 +93,49 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title'),
-                TextColumn::make('slug'),
-                TextColumn::make('category.name'),
-                ColorColumn::make('color'),
-                ImageColumn::make('thumbnail'),
-                TextColumn::make('content'),
-                TextColumn::make('tags'),
-                CheckboxColumn::make('published'),
 
+                TextColumn::make('id')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault:true),
+
+                TextColumn::make('title')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('category.name')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                ColorColumn::make('color')
+                ->toggleable(),
+
+                ImageColumn::make('thumbnail')
+                ->toggleable(),
+
+                TextColumn::make('content')
+                    ->sortable()
+                    ->searchable(),
+
+                TextColumn::make('tags')
+                ->toggleable(),
+
+                CheckboxColumn::make('published')
+                ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Published On')
+                    ->date()
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
 
             ])
             ->filters([
@@ -109,6 +143,7 @@ class PostResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
