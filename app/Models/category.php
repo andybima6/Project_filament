@@ -14,4 +14,8 @@ class category extends Model
 
 
     ];
+
+    public function post(){
+        return $this->hasMany(Post::class);
+    }
 }

@@ -60,7 +60,8 @@ class PostResource extends Resource
                         Select::make('category_id')
                             ->label('Category')
                             // kegunaan dari pluck adalah untuk mengambil nilai dari column pd tablenya
-                            ->options(category::all()->pluck('name', 'id'))
+                            // ->options(category::all()->pluck('name', 'id'))
+                            ->relationship('category','name')
                             ->required(),
                         ColorPicker::make('color')->required(),
                         // gambarnya terseimpan di public dan berada di storage/app/public

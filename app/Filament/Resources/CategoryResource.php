@@ -19,6 +19,7 @@ use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Filament\Resources\CategoryResource\Pages\EditCategory;
 use App\Filament\Resources\CategoryResource\Pages\CreateCategory;
 use App\Filament\Resources\CategoryResource\Pages\ListCategories;
+use App\Filament\Resources\CategoryResource\RelationManagers\PostsRelationManager;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 
@@ -63,7 +64,7 @@ class CategoryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            PostsRelationManager::class
         ];
     }
 
