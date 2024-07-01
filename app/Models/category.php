@@ -14,7 +14,7 @@ class category extends Model
 
 
     ];
-
+// 1 kategori to dapat memiliki many post
     public function post(){
         return $this->hasMany(post::class);
     }

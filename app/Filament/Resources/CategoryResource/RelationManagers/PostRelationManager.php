@@ -19,7 +19,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PostsRelationManager extends RelationManager
+class PostRelationManager extends RelationManager
 {
     protected static string $relationship = 'post';
 
@@ -81,6 +81,7 @@ class PostsRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('slug'),
                 Tables\Columns\CheckboxColumn::make('published'),
             ])
+
             ->filters([
                 //
             ])

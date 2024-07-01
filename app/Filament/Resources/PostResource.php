@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 use Filament\Forms;
 use App\Models\Post;
 use Filament\Tables;
@@ -29,6 +30,7 @@ use App\Filament\Resources\PostResource\Pages\EditPost;
 use App\Filament\Resources\PostResource\Pages\ListPosts;
 use App\Filament\Resources\PostResource\Pages\CreatePost;
 use App\Filament\Resources\PostResource\RelationManagers;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\ImageColumn;
@@ -39,7 +41,7 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $modelLabel = 'Posts';
+    protected static ?string $modelLabel = 'posts';
 
     public static function form(Form $form): Form
     {
@@ -63,7 +65,9 @@ class PostResource extends Resource
                             // ->options(category::all()->pluck('name', 'id'))
                             ->relationship('category','name')
                             ->required(),
+
                         ColorPicker::make('color')->required(),
+
                         // gambarnya terseimpan di public dan berada di storage/app/public
                         MarkdownEditor::make('content')->required()->columnSpan('full'),
                     ])->columnSpan(2)->columns(2),
@@ -74,11 +78,20 @@ class PostResource extends Resource
                         ->schema([
                             FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
                         ])->columnSpan(1),
+
                     section::make('Meta')->schema([
                         TagsInput::make('tags')->required(),
                         Checkbox::make('published')->required(),
-                    ])
                 ]),
+
+                // section::make('authors')->schema([
+                //     CheckboxList::make('authors')
+                //     ->label('co authors')
+                //     ->searchable()
+                //         //   ->multiple()
+                //         ->relationship('authors', 'name'),
+                // ])
+            ]),
             ])->columns(3);
         // Responsive
         // ])->columns([
@@ -156,7 +169,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+         AuthorsRelationManager::class
         ];
     }
 

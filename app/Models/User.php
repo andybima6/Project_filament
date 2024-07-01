@@ -51,4 +51,8 @@ class User extends Authenticatable implements FilamentUser
         // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
         return true;
     }
+    // many to many
+    public function posts(){
+        return $this->belongsToMany(post::class,'post_user')->withPivot(['order'])->withTimestamps();
+    }
 }

@@ -26,7 +26,12 @@ class post extends Model
         'tags' => 'array',
     ];
 
+    // one to many
     public function category(){
         return $this->belongsTo(category::class);
+    }
+    public function authors()
+    {
+        return  $this->belongsToMany(User::class,'post_user')->withPivot(['order'])->withTimestamps();
     }
 }
