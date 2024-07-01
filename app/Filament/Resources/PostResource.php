@@ -2,25 +2,31 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 use Filament\Forms;
 use App\Models\Post;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use App\Models\category;
 use Filament\Forms\Form;
-use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ColorColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Tables\Columns\CheckboxColumn;
 use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Tables\Actions\DeleteBulkAction;
@@ -30,10 +36,7 @@ use App\Filament\Resources\PostResource\Pages\EditPost;
 use App\Filament\Resources\PostResource\Pages\ListPosts;
 use App\Filament\Resources\PostResource\Pages\CreatePost;
 use App\Filament\Resources\PostResource\RelationManagers;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Section;
-use Filament\Tables\Columns\ImageColumn;
+use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
 
 class PostResource extends Resource
 {
@@ -47,55 +50,73 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                // section seperti halnya container
-                Section::make('Create a Post')
-                    ->description('create posts over here')
-                    // ->aside()
-                    // ->collapsed()
-                    ->schema([
+                Tabs::make('Create New post')->tabs([
+                    Tab::make('Tab 1')
+                        ->icon('heroicon-o-inbox-arrow-down')
+                        ->iconPosition(IconPosition::After)
+                        ->badge('hi')
+                        ->schema([
                         // kegunaan dari 'in:it,hi,he' adalah ketika user menginputkan harus ada kata itu
-                        // untujk menggunakan validatition itu menggunakan rulus pada ko9denya
-                        // ada berbagai macam rules seperti min value, max valuemin leght dan max,numeric ,dll
+                        // untuk menggunakan validasi itu menggunakan rules pada kodenya
+                        // ada berbagai macam rules seperti min value, max value, min length dan max length, numeric, dll
                         TextInput::make('title')->rules(['min: 2', 'max:10', 'in:it,hi,he'])->required(),
                         TextInput::make('slug')->required(),
 
                         Select::make('category_id')
                             ->label('Category')
-                            // kegunaan dari pluck adalah untuk mengambil nilai dari column pd tablenya
+                            // kegunaan dari pluck adalah untuk mengambil nilai dari kolom pada tabelnya
                             // ->options(category::all()->pluck('name', 'id'))
-                            ->relationship('category','name')
+                            ->relationship('category', 'name')
                             ->required(),
 
                         ColorPicker::make('color')->required(),
+                    ]),
 
-                        // gambarnya terseimpan di public dan berada di storage/app/public
+                    Tab::make('Content')->schema([
                         MarkdownEditor::make('content')->required()->columnSpan('full'),
-                    ])->columnSpan(2)->columns(2),
-
-                Group::make()->schema([
-                    Section::make('image')
-                        ->collapsed()
-                        ->schema([
-                            FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
-                        ])->columnSpan(1),
-
-                    section::make('Meta')->schema([
+                    ]),
+                    Tab::make('Meta')->schema([
+                        FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
                         TagsInput::make('tags')->required(),
                         Checkbox::make('published')->required(),
-                ]),
+                    ]),
+                ])->columnSpanFull()->activeTab(1)->persistTabInQueryString(),
 
-                // section::make('authors')->schema([
-                //     CheckboxList::make('authors')
-                //     ->label('co authors')
-                //     ->searchable()
-                //         //   ->multiple()
-                //         ->relationship('authors', 'name'),
-                // ])
-            ]),
+                // section seperti halnya container
+
+                         //  Section::make('Create a Post')
+                            // ->description('create posts over here')
+                            // // ->aside()
+                            // // ->collapsed()
+                            // ->schema([])->columnSpan(2)->column(2),
+
+                            //     Group::make()->schema([
+                            //         Section::make('image')
+                            //             ->collapsed()
+                            //             ->schema([
+                            //                   // gambarnya terseimpan di public dan berada di storage/app/public
+                            //                 FileUpload::make('thumbnail')->disk('public')->directory('thumbnails'),
+                            //             ])->columnSpan(1),
+
+
+
+                    // section::make('Meta')->schema([
+                    //     TagsInput::make('tags')->required(),
+                    //     Checkbox::make('published')->required(),
+                    // ]),
+
+                    // section::make('authors')->schema([
+                    //     CheckboxList::make('authors')
+                    //     ->label('co authors')
+                    //     ->searchable()
+                    //         //   ->multiple()
+                    //         ->relationship('authors', 'name'),
+                    // ])
+
             ])->columns(3);
         // Responsive
         // ])->columns([
-        //     // Ukuran break point, untuk angkanya itu collumnz
+        //     // Ukuran break point, untuk angkanya itu columns
         //     'default' => 1,
         //     'md' => 2,
         //     'lg' => 3,
@@ -111,7 +132,7 @@ class PostResource extends Resource
                 TextColumn::make('id')
                     ->sortable()
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault:true),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('title')
                     ->sortable()
@@ -129,20 +150,20 @@ class PostResource extends Resource
                     ->toggleable(),
 
                 ColorColumn::make('color')
-                ->toggleable(),
+                    ->toggleable(),
 
                 ImageColumn::make('thumbnail')
-                ->toggleable(),
+                    ->toggleable(),
 
                 TextColumn::make('content')
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('tags')
-                ->toggleable(),
+                    ->toggleable(),
 
                 CheckboxColumn::make('published')
-                ->toggleable(),
+                    ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label('Published On')
@@ -169,7 +190,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-         AuthorsRelationManager::class
+            AuthorsRelationManager::class
         ];
     }
 
