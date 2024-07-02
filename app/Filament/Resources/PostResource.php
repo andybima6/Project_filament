@@ -8,6 +8,8 @@ use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use App\Models\category;
 use Filament\Forms\Form;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Tabs;
@@ -37,6 +39,7 @@ use App\Filament\Resources\PostResource\Pages\ListPosts;
 use App\Filament\Resources\PostResource\Pages\CreatePost;
 use App\Filament\Resources\PostResource\RelationManagers;
 use App\Filament\Resources\PostResource\RelationManagers\AuthorsRelationManager;
+use Filament\Tables\Filters\Filter;
 
 class PostResource extends Resource
 {
@@ -174,7 +177,29 @@ class PostResource extends Resource
 
             ])
             ->filters([
-                //
+                // Cara 1 memnetukan filter dengan true and false
+                Filter::make('Publish Posts')->query(
+                    function (Builder $query) : Builder {
+                        return $query->where('published',true);
+                    }
+                ),
+                Filter::make('Unpublish Posts')->query(
+                    function (Builder $query) : Builder {
+                        return $query->where('published',false);
+                    }
+                ),
+                // cara 2 dijadikan 1 kode
+                TernaryFilter::make('published'),
+
+                SelectFilter::make('category_id')
+                ->label('Category')
+                // cara 1 memanggil relasi
+                // ->options(category::all()->pluck('name','id'))
+                // cara 2
+                ->relationship('category','name')
+                ->multiple()
+                ->preload()
+                ->searchable()
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
