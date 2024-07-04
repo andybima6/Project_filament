@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\PostsResource\RelationManagers\CommentsRelationManager;
 use Filament\Forms;
 use App\Models\Post;
 use Filament\Support\Enums\IconPosition;
@@ -215,7 +216,8 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            AuthorsRelationManager::class
+            AuthorsRelationManager::class,
+            CommentsRelationManager::class
         ];
     }
 
