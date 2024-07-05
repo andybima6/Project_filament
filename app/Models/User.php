@@ -46,10 +46,11 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
         ];
     }
+    // User Panel Access
     public function canAccessPanel(Panel $panel): bool
     {
         // return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
-        return true;
+        return $this-> email === 'andybima6@gmail.com'; // return true;
     }
     // many to many
     public function posts(){
