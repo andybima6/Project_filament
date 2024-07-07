@@ -36,6 +36,7 @@ class UserResource extends Resource
                 TextInput::make('email')->email(),
                 // TextInput::make('password')->password()->readOnlyOn('create'),
                 TextInput::make('password')->password()->visibleOn('create'),
+                TextInput::make('role')->required(),
             //     Select::make('name')->options([
             //         'test' => 'test',
             //         'youtube' => 'another'
@@ -50,8 +51,25 @@ class UserResource extends Resource
                 TextColumn::make('id'),
                 TextColumn::make('name'),
                 TextColumn::make('email'),
+                TextColumn::make('role')
+                ->sortable()
+                ->searchable()
+                // Badges
+                ->badge()
+                ->color(function(string $state) : string {
+                    // Cara 1
+                    // if($state == 'ADMIN') return 'danger';
+                    // return 'gray';
+                    // Cara 2
+                    return match ($state) {
+                        'ADMIN' => 'danger', // Red
+                        'EDITOR' => 'info',  // Blue
+                        'USER' => 'success', // Green
+                        default => 'gray',   // Default color if no match found
+                    };
+                }),
             ])
-            
+
             ->filters([
                 //
             ])
