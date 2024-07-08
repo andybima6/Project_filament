@@ -48,6 +48,12 @@ class PostResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    // digunakan untuk drop-down
+    protected static ?string $navigationGroup = 'Blog';
+
+    // Tataletak diatas atau engganya
+    protected static ?int $navigationSort = 10;
+
     protected static ?string $modelLabel = 'posts';
 
     public static function form(Form $form): Form
