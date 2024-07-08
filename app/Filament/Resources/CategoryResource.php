@@ -33,6 +33,9 @@ class CategoryResource extends Resource
 
     protected static ?string $navigationGroup = 'Blog';
 
+    // navigation parant item dilihat berdasarkan nama modellabelnya
+    protected static ?string $navigationParentItem = 'Articels';
+
     protected static ?int $navigationSort = 10;
     protected static bool $shouldSkipAuthorization = true;
 

@@ -51,10 +51,12 @@ class PostResource extends Resource
     // digunakan untuk drop-down
     protected static ?string $navigationGroup = 'Blog';
 
-    // Tataletak diatas atau engganya
+    // Tataletak diatas atau engganya,bisa di cek di resource pada extendsnya
     protected static ?int $navigationSort = 10;
 
-    protected static ?string $modelLabel = 'posts';
+    protected static ?string $modelLabel = 'Articels';
+
+
 
     public static function form(Form $form): Form
     {
