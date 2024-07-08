@@ -8,7 +8,7 @@ use App\Models\Category;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-
+use Illuminate\Support\Str;
 use Filament\Tables\Actions\EditAction;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Actions\BulkActionGroup;
@@ -37,8 +37,22 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                TextInput::make('name')->required(),
-                TextInput::make('slug')->required(),
+                // Auto Slug Generation & afterStateUpdated
+                TextInput::make('name')->required()
+                ->live(onBlur:true)
+                ->afterStateUpdated(function(string $operation,string $state,Forms\Set $set,Forms\Get $get,Category $category){
+                    // dump($operation); //Edit Create
+                    // dump($state);
+                    if($operation === 'edit'){
+                        return;
+                    }
+                    $set('slug',str::slug($state));
+                    // dump($category);
+                }),
+                TextInput::make('slug')->required()
+                ->minLength(1)
+                ->maxLength(150)
+                ->unique(ignoreRecord: true),
             ]);
     }
 
