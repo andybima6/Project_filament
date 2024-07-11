@@ -3,18 +3,27 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
+
+use Illuminate\Support\Carbon;
 use Filament\Widgets\ChartWidget;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
+use Illuminate\Support\Carbon as SupportCarbon;
 
 class Chart extends ChartWidget
 {
+
+    use InteractsWithPageFilters;
     protected static ?string $heading = 'Chart';
     protected int | string | array $columnSpan = 1;
 
     protected function getData(): array
 
     {
+        $start = $this->filters['startDate'] ;
+        $end = $this->filters['endDate'] ;
+
         // return [
         //     'datasets' => [
         //         [
@@ -34,8 +43,8 @@ class Chart extends ChartWidget
 // Flowframe pda decomentation
     $data = Trend::model(User::class)
     ->between(
-        start: now()->subMonths( 6),
-        end: now(),
+        start: $start ? Carbon::parse($start) : now()->subMonths( 6),
+        end: $end ? Carbon::parse($end):now(),
     )
     ->perMonth()
     ->count();
