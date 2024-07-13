@@ -21,8 +21,8 @@ class Chart extends ChartWidget
     protected function getData(): array
 
     {
-        $start = $this->filters['startDate'] ;
-        $end = $this->filters['endDate'] ;
+        $start = $this->filters['startDate'];
+        $end = $this->filters['endDate'];
 
         // return [
         //     'datasets' => [
@@ -43,12 +43,12 @@ class Chart extends ChartWidget
 // Flowframe pda decomentation
     $data = Trend::model(User::class)
     ->between(
-        start: $start ? Carbon::parse($start) : now()->subMonths( 6),
+        start: $start ? Carbon::parse($start) : now()->subMonths(6),
         end: $end ? Carbon::parse($end):now(),
     )
     ->perMonth()
     ->count();
-
+   // Filters data berdasarkan tanggal
         return [
             'datasets' => [
                 [

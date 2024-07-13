@@ -11,24 +11,21 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 class staatistik extends BaseWidget
 {
     use InteractsWithPageFilters;
+
     protected function getStats(): array
     {
-
-    // mendefinisikan  nilainya tidak null
-        $start = $this->filters['startDate'] ;
-        $end = $this->filters['endDate'] ;
+        // Ensure filters is an array and provide default values
+        $filters = $this->filters ?? [];
+        $start = $filters['startDate'] ?? null;
+        $end = $filters['endDate'] ?? null;
 
         return [
-            stat::make(
+            Stat::make(
                 'New Users',
-                User::
-                when($start,
-                fn ($query)=> $query->whereDate('created_at','>',$start))
-
-                ->when($end,
-                fn ($query)=> $query->whereDate('created_at','<',$end))
-
-                ->count())
+                User::when($start, fn($query) => $query->whereDate('created_at', '>', $start))
+                    ->when($end, fn($query) => $query->whereDate('created_at', '<', $end))
+                    ->count()
+            )
                 ->description('New Users that have joined')
                 ->descriptionIcon('heroicon-m-user-plus', IconPosition::Before)
                 ->chart([1, 3, 5, 10, 20, 40])
