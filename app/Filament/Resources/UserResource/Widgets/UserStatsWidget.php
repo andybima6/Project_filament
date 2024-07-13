@@ -15,7 +15,7 @@ class UserStatsWidget extends BaseWidget
     {
         return [
             Stat::make('name',$this->record->name ?? 'No Selected Users'),
-            Stat::make('Num Posts',$this->record->posts()->count() ?? 0)
+            // Stat::make('Num Posts',$this->record->posts()->count() ?? 0)
         ];
     }
 }

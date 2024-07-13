@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Exports\UserExporter;
 use Filament\Forms;
 use App\Models\User;
 use Filament\Tables;
 use Filament\Forms\Form;
+use Filament\Tables\Actions\ExportBulkAction;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
@@ -21,6 +23,9 @@ use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages\ListUsers;
 use App\Filament\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Resources\UserResource\RelationManagers;
+use Filament\Actions\Exports\Enums\ExportFormat;
+use Filament\Actions\Exports\ExportColumn;
+use Filament\Tables\Actions\ExportAction;
 
 class UserResource extends Resource
 {
@@ -79,10 +84,22 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->headerActions([
+                ExportAction::make()
+                ->exporter(UserExporter::class)
+                ->formats([
+                    ExportFormat::Csv
+                ])
+            ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+                ExportBulkAction::make()
+                ->exporter(UserExporter::class)
+                ->formats([
+                    ExportFormat::Csv
+                ])
             ]);
     }
 
